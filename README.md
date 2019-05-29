@@ -11,18 +11,3 @@
     // 音频
     AVCaptureDevice *micDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
         _microphoneDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:micDevice error:nil];
-
-2. 初始化输出流
-    _queue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
-
-    // 图像
-    _videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
-    _videoDataOutput.videoSettings = @{(id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInteger:kCVPixelFormatType_32BGRA]};
-    _videoDataOutput.alwaysDiscardsLateVideoFrames = YES;
-    [_videoDataOutput setSampleBufferDelegate:self queue:_queue];
-    
-    // 音频
-    _audioDataOutput = [[AVCaptureAudioDataOutput alloc] init];
-        [_audioDataOutput setSampleBufferDelegate:self queue:_queue];
-
-创建了一个串行队列，以确保每一帧按顺序处理。输出流的回调方法为- (void)captureOutput:(AVCaptureOutput *)output didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection;。
